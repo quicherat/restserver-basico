@@ -50,7 +50,27 @@ const login = async (req, res= response) => {
     
 }
 
+const googleSignIn = async (req, res=response) => {
+    
+    try {
+        const { id_token } =req.body;
+    
+        res.json ({
+            msg: 'Todo bien!',
+            id_token
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        })
+    }
+    
+}
+
 
 export {
-    login
+    login,
+    googleSignIn
 }
