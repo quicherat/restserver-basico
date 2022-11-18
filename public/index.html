@@ -5,6 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Sign-in</title>
+    <style>
+        button {
+            padding: 5px;
+            color: beige;
+            background-color: brown;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Google Sign-in</h1>
@@ -23,6 +31,10 @@
         data-shape="rectangular"
         data-logo_alignment="left">
     </div>
+
+    <button id="google_signout">
+        Signout
+    </button>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -43,10 +55,23 @@
                 .then( resp => resp.json() )
                 .then( resp => {
                     console.log(resp)
+                    localStorage.setItem('email', resp.usuario.correo)
                 })
                 .catch (console.warn);
             
         }
+
+        const button = document.getElementById('google_signout');
+        button.onclick = () => {
+            console.log(google.accounts.id);
+            google.accounts.id.disableAutoSelect()
+
+            google.accounts.id.revoke( localStorage.getItem('email'), done => {
+                localStorage.clear();
+                location.reload();
+            })
+        }
+        
     </script>
 </body>
 </html>
