@@ -1,5 +1,40 @@
 import { response } from "express";
 import  Categoria  from '../models/categoria.js'
+import  Usuario  from '../models/usuario.js'
+
+const obtenerCategorias = async (req, res = response) => {
+
+    const{limite = 5, desde = 0} = req.query;
+    const query = {estado: true};
+
+    const [total, categorias] = await Promise.all([
+        Categoria.countDocuments(query),
+        Categoria.find(query)
+          .populate('usuario', 'nombre')
+          .skip(Number(desde))
+          .limit(Number(limite))
+      ])
+      
+      res.json({      
+        total,
+        categorias
+      })
+
+}
+
+const obtenerCategoria = async (req, res = response) => {
+
+    try {
+        const {id} = req.params;
+        const categoria = await Categoria.findById(id);
+    
+        res.json(categoria)
+        
+    } catch (error) {
+        console.log(error);
+    }
+
+}
 
 
 
@@ -27,6 +62,32 @@ const crearCategoria = async (req, res = response) => {
 
 }
 
+const actualizarCategoria = async (req, res = response) => {
+    try {
+        const {id} = req.params;
+        const {_id, estado, nombre, usuario} = req.body;
+
+        const categoria = await Categoria.findByIdAndUpdate(id, {
+            nombre: nombre.toUpperCase(),
+            usuario: req.usuario._id
+        }, { new: true}).populate('usuario', 'nombre');
+
+        res.json(categoria);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const borrarCategoria = async (req, res = response) => {
+    const {id} = req.params;
+    const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true});
+    res.json(categoria);
+}
+
 export {
-    crearCategoria
+    crearCategoria,
+    obtenerCategorias,
+    obtenerCategoria,
+    actualizarCategoria,
+    borrarCategoria
 }
