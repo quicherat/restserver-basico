@@ -1,5 +1,6 @@
 import { response } from "express";
-import  Categoria  from '../models/categoria.js'
+// import  Categoria  from '../models/categoria.js'
+import  {Categoria}  from '../models/index.js'
 import  Usuario  from '../models/usuario.js'
 
 const obtenerCategorias = async (req, res = response) => {
@@ -26,7 +27,7 @@ const obtenerCategoria = async (req, res = response) => {
 
     try {
         const {id} = req.params;
-        const categoria = await Categoria.findById(id);
+        const categoria = await Categoria.findById(id).populate('usuario', 'nombre');
     
         res.json(categoria)
         
