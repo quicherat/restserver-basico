@@ -7,7 +7,7 @@ import {router} from '../routes/usuarios.js'
 import {routerAuth} from '../routes/auth.js'
 import { routerCategorias } from '../routes/categorias.js';
 import { routerProductos } from '../routes/productos.js';
-import { routerBuscar } from '../routes/buscar.js';
+import { routerBuscar, routerBuscarSub } from '../routes/buscar.js';
 
 export class Server {
 
@@ -18,6 +18,7 @@ export class Server {
     this.paths = {
       auth: '/api/auth',
       buscar: '/api/buscar',
+      buscarSub: '/api/buscarSub',
       categorias: '/api/categorias',
       productos: '/api/productos',
       usuarios: '/api/usuarios',
@@ -52,6 +53,7 @@ export class Server {
   routes() {
     this.app.use(this.paths.auth, routerAuth);    
     this.app.use(this.paths.buscar, routerBuscar);    
+    this.app.use(this.paths.buscarSub, routerBuscarSub);    
     this.app.use(this.paths.categorias, routerCategorias);    
     this.app.use(this.paths.productos, routerProductos);    
     this.app.use(this.paths.usuarios, router);    
