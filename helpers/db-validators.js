@@ -41,10 +41,19 @@ const existeProductoPorId = async (id) => {
   }
 }
 
+const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
+  const incluida = colecciones.includes( coleccion);
+  if (!incluida) {
+    throw new Error(`La coleccion ${coleccion} no se puede usar. Use solo ${colecciones}`);
+  }
+  return true
+}
+
 export {
   esRoleValido,
   emailExiste,
   existeUsuarioPorId,
   existeCategoriaPorId,
-  existeProductoPorId
+  existeProductoPorId,
+  coleccionesPermitidas
 }
