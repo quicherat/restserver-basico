@@ -14,12 +14,12 @@ Cloudinary.config({
   secure: true
 });
 
-//---------------------CARGAR ARCHIVO----------------------------
+//_---------------------CARGAR ARCHIVO----------------------------
 const cargarArchivo = async (req, res = response) => {
   try {
-    //Aplicamos para txt y md; no para imágenes. Creamos la carpeta textos
-    // const nombre = await subirArchivo(req.files, ['txt', 'md'], 'textos');
-    //Para usar la carpeta img y los tipo default ponemos undefined
+    //*Aplicamos para txt y md; no para imágenes. Creamos la carpeta textos
+    //* const nombre = await subirArchivo(req.files, ['txt', 'md'], 'textos');
+    //*Para usar la carpeta img y los tipo default ponemos undefined
     const nombre = await subirArchivo(req.files, undefined, "img");
     res.json({ nombre });
   } catch (msg) {
@@ -27,7 +27,7 @@ const cargarArchivo = async (req, res = response) => {
   }
 };
 
-//------------ACTUALIZAR IMAGEN----------------------
+//_------------ACTUALIZAR IMAGEN----------------------
 const actualizarImagen = async (req, res = response) => {
   const { id, coleccion } = req.params;
 
@@ -58,11 +58,11 @@ const actualizarImagen = async (req, res = response) => {
       });
   }
 
-  //Limpiar imágenes previas
+  //* Limpiar imágenes previas
   try {
-    //Vemos si existe la propiedad img en el modelo
+    //* Vemos si existe la propiedad img en el modelo
     if (modelo.img) {
-      //Hay que borrar la imagen del servidor
+      //* Hay que borrar la imagen del servidor
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
       const pathImagen = path.join(
         __dirname,
@@ -70,7 +70,7 @@ const actualizarImagen = async (req, res = response) => {
         coleccion,
         modelo.img
       );
-      //Preguntamos si existe el archivo, y lo borramos en caso true
+      //* Preguntamos si existe el archivo, y lo borramos en caso true
       if (fs.existsSync(pathImagen)) {
         fs.unlinkSync(pathImagen);
       }
@@ -81,7 +81,7 @@ const actualizarImagen = async (req, res = response) => {
     });
   }
 
-  //Subir nueva imagen
+  //* Subir nueva imagen
   try {
     const nombre = await subirArchivo(req.files, undefined, coleccion);
     modelo.img = nombre;
@@ -97,7 +97,7 @@ const actualizarImagen = async (req, res = response) => {
 
 
 
-//------------ACTUALIZAR IMAGEN CLOUDINARY----------------------
+//_------------ACTUALIZAR IMAGEN CLOUDINARY----------------------
 const actualizarImagenCloudinary = async (req, res = response) => {
   const { id, coleccion } = req.params;
 
@@ -128,23 +128,23 @@ const actualizarImagenCloudinary = async (req, res = response) => {
       });
   }
 
-  //Limpiar imágenes previas
+  //* Limpiar imágenes previas
   try {
-    //Vemos si existe la propiedad img en el modelo
+    //* Vemos si existe la propiedad img en el modelo
     if (modelo.img) {
-      //Extraemos el id de la imagen
+      //* Extraemos el id de la imagen
       const nombreArr = modelo.img.split('/');
       const nombre    = nombreArr[ nombreArr.length - 1 ];
       const [ public_id ] = nombre.split('.');
       await Cloudinary.uploader.destroy( public_id );
     }
   } catch (error) {
-    // res.status(500).json({
-    //   msg: error,
-    // });
+    res.status(500).json({
+      msg: error,
+    });
   }
 
-  //Subir nueva imagen
+  //* Subir nueva imagen
   try {
     const {tempFilePath} = req.files.archivo;
     const {secure_url} = await Cloudinary.uploader.upload(tempFilePath);
@@ -156,10 +156,10 @@ const actualizarImagenCloudinary = async (req, res = response) => {
       msg: `No se pudo guardar la imagen`      
     });
   }
-  // res.json({ modelo });
+  
 };
 
-//------------Mostrat Imagen--------------------------
+//_------------Mostrar Imagen--------------------------
 const mostrarImagen = async (req, res = response) => {
   const { id, coleccion } = req.params;
 
@@ -190,9 +190,9 @@ const mostrarImagen = async (req, res = response) => {
       });
   }
 
-  //Traer la imagen previa
+  //* Traer la imagen previa
   try {
-    //Vemos si existe la propiedad img en el modelo
+    //* Vemos si existe la propiedad img en el modelo
     if (modelo.img) {
       //Como existe armamos la ruta
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -202,7 +202,7 @@ const mostrarImagen = async (req, res = response) => {
         coleccion,
         modelo.img
       );
-      //Preguntamos si existe el archivo, y lo traemos en caso true
+      //* Preguntamos si existe el archivo, y lo traemos en caso true
       if (fs.existsSync(pathImagen)) {
         return res.sendFile(pathImagen);
       }
@@ -213,10 +213,10 @@ const mostrarImagen = async (req, res = response) => {
     });
   }
 
-  //Mandamos el no-image
+  //* Mandamos el no-image
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const pathImagen = path.join(__dirname, "../assets/no-image.jpg");
-  //Preguntamos si existe el archivo, y lo traemos en caso true
+  //* Preguntamos si existe el archivo, y lo traemos en caso true
   if (fs.existsSync(pathImagen)) {
     return res.sendFile(pathImagen);
   }
